@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+
+  <meta name="author" content="Sprax (Christian Koop)">
+  <!--  <meta name="description" content="View the history of Usernames, Skins, Capes and much more!">-->
+
+  <meta name="twitter:title" content="Apollo - So viel mehr als privater Speicherplatz">
+  <!--  <meta name="twitter:description" content="Easily search for your next Minecraft Skin or Cape - You can search for specific Usernames too!">-->
+  <meta name="twitter:url" content="https://nas128.sprax2013.de/">
+  <!--  <meta name="twitter:image" content="https://beta.SkinDB.net/img/Logo_HD.png">-->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:creator" content="@SpraxDev">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Apollo - So viel mehr als privater Speicherplatz">
+  <meta property="og:site_name" content="Nas128.Sprax2013.de">
+  <!--  <meta property="og:description" content="Easily search for your next Minecraft Skin or Cape - You can search for specific Usernames too!">-->
+  <!--  <meta property="og:image" content="https://beta.SkinDB.net/img/Logo_HD.png">-->
+  <!--  <meta property="og:image:width" content="1440">-->
+  <!--  <meta property="og:image:height" content="1440">-->
+  <meta property="og:url" content="https://nas128.sprax2013.de.de">
+  <meta property="og:locale" content="de_DE">
+  <!--  <meta property="og:locale:alternate" content="de_DE"> &lt;!&ndash; TODO: Use 'language_TERRITORY' instead &ndash;&gt;-->
+  <!--  <meta property="og:locale:alternate" content="en_EN"> &lt;!&ndash; TODO: Use 'language_TERRITORY' instead &ndash;&gt;-->
+
+  <title>Eris WoL</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css"
+        integrity="sha512-F7WyTLiiiPqvu2pGumDR15med0MDkUIo5VTVyyfECR5DZmCnDhti9q5VID02ItWjq6fvDfMaBaDl2J3WdL1uxA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+  <style>
+      html {
+          height: 100%;
+      }
+
+      body {
+          height:          100%;
+          background:      url("https://cdn.eso.org/images/large/eso1142a.jpg") no-repeat;
+          background-size: cover;
+      }
+
+      main {
+          padding-top: 25vh;
+      }
+
+      .center-content {
+          display:         flex;
+          justify-content: center;
+      }
+  </style>
+</head>
+
+<body>
+<main class="center-content">
+  <div class="card">
+    <div class="card-header">
+      Das Apollo-System ist offline!
+    </div>
+
+    <div class="card-body">
+      <!--      <h5 class="card-title">Special title treatment</h5>-->
+      <p class="card-text">
+        Deine Zugangsberechtigung kann aktuell nicht abgerufen werden
+      </p>
+      <hr>
+      <p class="card-text">
+        Bitte bestätige, dass du kein automatisiertes System bist:
+      </p>
+
+      <!--      <form method="POST">-->
+      <!--        <div class="h-captcha" data-sitekey="5c1e20a5-0e8f-4580-9294-c56dcdfdd12b"></div>-->
+      <!--        <script src="https://hcaptcha.com/1/api.js" async defer></script>-->
+      <!--      </form>-->
+
+      <form method="POST" id="h-captcha-form">
+        <input name="action" value="auth" hidden>
+
+        <div class="h-captcha center-content" data-sitekey="5c1e20a5-0e8f-4580-9294-c56dcdfdd12b"
+             data-callback="hCaptchaDone"></div>
+        <script>
+          function hCaptchaDone() {
+            document.getElementById('h-captcha-form').submit();
+          }
+        </script>
+        <script src="https://hcaptcha.com/1/api.js?recaptchacompat=off" async defer></script>
+      </form>
+    </div>
+
+    <div class="card-footer text-muted small">
+      <a href="https://www.eso.org/public/images/eso1142a/" class="text-reset"
+         target="_blank" rel="noopener noreferrer">Image Credit: ESO/L. Calçada and Nick Risinger</a>
+    </div>
+  </div>
+</main>
+</body>
+</html>

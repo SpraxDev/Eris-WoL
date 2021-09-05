@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+
+  <meta name="author" content="Sprax (Christian Koop)">
+<!--  <meta name="description" content="View the history of Usernames, Skins, Capes and much more!">-->
+
+  <meta name="twitter:title" content="Apollo - So viel mehr als privater Speicherplatz">
+<!--  <meta name="twitter:description" content="Easily search for your next Minecraft Skin or Cape - You can search for specific Usernames too!">-->
+  <meta name="twitter:url" content="https://nas128.sprax2013.de/">
+<!--  <meta name="twitter:image" content="https://beta.SkinDB.net/img/Logo_HD.png">-->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:creator" content="@SpraxDev">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Apollo - So viel mehr als privater Speicherplatz">
+  <meta property="og:site_name" content="Nas128.Sprax2013.de">
+<!--  <meta property="og:description" content="Easily search for your next Minecraft Skin or Cape - You can search for specific Usernames too!">-->
+<!--  <meta property="og:image" content="https://beta.SkinDB.net/img/Logo_HD.png">-->
+<!--  <meta property="og:image:width" content="1440">-->
+<!--  <meta property="og:image:height" content="1440">-->
+  <meta property="og:url" content="https://nas128.sprax2013.de.de">
+  <meta property="og:locale" content="de_DE">
+<!--  <meta property="og:locale:alternate" content="de_DE"> &lt;!&ndash; TODO: Use 'language_TERRITORY' instead &ndash;&gt;-->
+<!--  <meta property="og:locale:alternate" content="en_EN"> &lt;!&ndash; TODO: Use 'language_TERRITORY' instead &ndash;&gt;-->
+
+  <title>Eris WoL</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/awesome-notifications@3.1.1/dist/style.css"
+        integrity="sha256-BGljdbE8CJxdKsRalauzk7+bcDz+Gk7JPNY9pGK/vOI=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css"
+        integrity="sha512-F7WyTLiiiPqvu2pGumDR15med0MDkUIo5VTVyyfECR5DZmCnDhti9q5VID02ItWjq6fvDfMaBaDl2J3WdL1uxA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+  <style>
+      html {
+          height: 100%;
+      }
+
+      body {
+          height:            100%;
+          background-image:  url("https://cdn.eso.org/images/large/eso1142a.jpg");
+          background-repeat: no-repeat;
+          background-size:   cover;
+      }
+
+      main {
+          padding-top: 25vh;
+      }
+
+      .center-content {
+          display:         flex;
+          justify-content: center;
+      }
+  </style>
+</head>
+
+<body>
+<main class="center-content">
+  <div class="card">
+    <div class="card-header">
+      Das Apollo-System ist offline!
+    </div>
+
+    <div class="card-body">
+      <h5 class="card-title">Temporärer Zugang bestätigt!</h5>
+      <p class="card-text">
+        Das System kann auf Wunsch versucht werden zu starten:
+      </p>
+
+      <form method="POST" onsubmit="startTask(event);" id="formNoTaskRunning">
+        <input name="action" value="eris_status" hidden>
+
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="auto" id="eris_status_auto">
+          <label class="form-check-label" for="eris_status_auto">
+            Zukünftig automatisch verbinden
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-success">System starten</button>
+      </form>
+    </div>
+
+    <form method="GET" onsubmit="stopTask(event);" id="formTaskRunning" style="display: none;margin: 1rem;">
+      <div id="erisStatusText" class="placeholder-wave">
+        <strong>Online:</strong> <em data-type="eris-online"><span class="placeholder col-1"></span></em>
+        <div class="spinner-border spinner-border-sm" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <br>
+        <strong>Zuletzt online:</strong> <em data-type="eris-last-online"><span class="placeholder col-4"></span></em>
+        <br><br>
+
+        <strong>Stand dieser Infos:</strong> <em data-type="eris-curr-time"><span class="placeholder col-4"></span></em>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Abbrechen</button>
+    </form>
+
+    <div class="card-footer text-muted small">
+      <a href="https://www.eso.org/public/images/eso1142a/" class="text-reset"
+         target="_blank" rel="noopener noreferrer">Image Credit: ESO/L. Calçada and Nick Risinger</a>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/awesome-notifications@3.1.1/dist/index.var.js"
+        integrity="sha256-yLXMPZ2W2mS8bXvISgIWHosfhetH3LrUFddQcNbJ62I=" crossorigin="anonymous"></script>
+
+<script>
+  'use strict';
+
+  const notifier = new AWN();
+  let taskActive = document.getElementById('eris_status_auto').checked;
+  let taskRunning = false;
+
+  if (document.cookie.indexOf('wol_auto=1') !== -1) {
+    document.getElementById('eris_status_auto').checked = true;
+    startTask();
+  }
+
+  function startTask(event) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    if (!taskActive) {
+      notifier.asyncBlock((async () => {
+        taskActive = true;
+
+        document.getElementById('formNoTaskRunning').style.display = 'none';
+        document.getElementById('formTaskRunning').style.display = null;
+
+        checkStatusTask();
+      })(), 'Eris wird kontaktiert...');
+    }
+  }
+
+  function stopTask(event) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    if (taskActive) {
+      notifier.asyncBlock((async () => {
+        taskActive = false;
+
+        document.getElementById('formTaskRunning').style.display = 'none';
+        document.getElementById('formNoTaskRunning').style.display = null;
+      })(), 'Eris wird nicht weiter kontaktiert');
+    }
+  }
+
+  function checkStatusTask() {
+    if (!taskRunning) {
+      taskRunning = true;
+
+      erisStatus()
+          .then((status) => {
+            if (taskActive) {
+              if (status) {
+                setTimeout(() => checkStatusTask(), Math.min(500, status['cooldown']));
+              } else {
+                setTimeout(() => checkStatusTask(), 1500);
+              }
+            }
+          })
+          .catch((err) => {
+            console.error('Error fetching ErisStatus:', err);
+            notifier.alert(`${err.message || 'Unknown error'}`);
+
+            if (taskActive) {
+              setTimeout(() => checkStatusTask(), 1500);
+            }
+          })
+          .finally(() => taskRunning = false);
+    }
+  }
+
+  async function erisStatus() {
+    const httpRes = await fetch(location.href, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({action: 'eris_status', 'auto': document.getElementById('eris_status_auto').checked})
+    });
+
+    if (!httpRes.headers.has('X-ZeroPi') && httpRes.status < 500) {
+      notifier.success('Looks like Apollo is online!');
+
+      notifier.asyncBlock((async () => {
+        return new Promise(resolve => {
+          setTimeout(resolve, 750);
+        });
+      })(), () => window.location.reload());
+      return;
+    }
+
+    if (!httpRes.ok) {
+      notifier.alert(`HTTP ${httpRes.status} (${httpRes.statusText})`);
+      console.error(`Got code ${httpRes.status} when trying to fetch ErisStatus.`);
+      return;
+    }
+
+    const body = await httpRes.json();
+
+    if (body['eris'] == null) {
+      notifier.alert(`Got invalid status response`);
+      console.error('Response does not contain ErisStatus:', body);
+      return;
+    }
+    console.log('ErisStatus:', body['eris']);
+
+    document.querySelector('#erisStatusText [data-type="eris-online"]').innerText = body['eris']['online'] ? 'Ja' : 'Nein';
+    document.querySelector('#erisStatusText [data-type="eris-last-online"]').innerText = body['eris']['lastOnline'] <= 0 ? 'Unknown' : new Date(body['eris']['lastOnline']).toString();
+    document.querySelector('#erisStatusText [data-type="eris-curr-time"]').innerText = new Date().toString();
+
+    if (body['eris']['online']) {
+      notifier.success('Looks like Apollo is online!');
+
+      notifier.asyncBlock((async () => {
+        return new Promise(resolve => {
+          setTimeout(resolve, 750);
+        });
+      })(), () => window.location.reload());
+    }
+
+    return body['eris'];
+  }
+</script>
+</body>
+</html>
